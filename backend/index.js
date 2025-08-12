@@ -1,6 +1,7 @@
 const express = require('express');
-const cors = require('cors');// impacting the cors module to wnable cross-origin 
+const cors = require('cors');// impacting the cors module to wnable cross-origin
 const UserRouter = require('./routers/userRouter');
+const WebsiteRouter = require('./routers/websiteRouter')
 
 // const ProductRouter = require('./routers/productRouter');
 const app = express(); //creating an instance of an express appliction
@@ -12,10 +13,9 @@ const PORT = 5000;  //defining the port number for the server
 app.use(cors({
     origin: '*', //allowing request from any origin.
 }))
-app.use(express.json()); //Middleware to parse JSON 
-
+app.use(express.json()); //Middleware to parse JSON
 app.use('/user', UserRouter);
-// app.use('/product', ProductRouter);
+app.use('/website', WebsiteRouter)
 
 // app.use(express.json());
 //Routing
