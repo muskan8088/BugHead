@@ -16,36 +16,36 @@ const SignUpSchema = Yup.object().shape(
         os: Yup.string()
             .required('Os is required'),
         category: Yup.string().required(''),
-        browser:Yup.string(),
+        browser: Yup.string(),
         website: Yup.string().url('invalid url').required('website is required')
-        
+
     }
 )
 
 const App = () => {
-    
+
     const signupForm = useFormik({
         initialValues: {
             issueDescription: '',
             os: '',
             category: '',
-            browser:'',
+            browser: '',
             website: '',
-            
+
         },
         onSubmit: (values, { resetForm }) => {
             console.log(values);
 
-            //axios.post('http://localhost:5000/website/add', values)
-                //.then((result) => {
-                   // toast.success('website registered successfully');
-                    //resetForm();
+            axios.post('http://localhost:5000/issue/add', values)
+                .then((result) => {
+                    toast.success('website registered successfully');
+                    resetForm();
                     //redirect to login page
                    // router.push('/login')
-               // }).catch((err) => {
-                    //console.log(err);
-                    //toast.error('something went wrong!')
-               // });
+                }).catch((err) => {
+                    console.log(err);
+                    toast.error('something went wrong!')
+                });
         },
         validationSchema: SignUpSchema,
     });
@@ -56,7 +56,7 @@ const App = () => {
                     <h1 className="block text-2xl font-bold text-gray-800 dark:text-white">
                         createissue
                     </h1>
-                    
+
                 </div>
                 <div className="mt-5">
                     <button
@@ -87,177 +87,177 @@ const App = () => {
                                 fill="#EB4335"
                             />
                         </svg>
-                        signup with Google 
+                        signup with Google
                     </button>
                     <div className="py-3 flex items-center text-xs text-gray-400 uppercase before:flex-1 before:border-t before:border-gray-200 before:me-6 after:flex-1 after:border-t after:border-gray-200 after:ms-6 dark:text-neutral-500 dark:before:border-neutral-600 dark:after:border-neutral-600">
                         Or
                     </div>
                     {/* Form */}
                     <form onSubmit={signupForm.handleSubmit}>
-                        <div className="grid gap-y-4"/>
-                            {/* Form Group */}
-                            <div>
-                                <label
-                                    htmlFor="name"
-                                    className="block text-sm mb-2 dark:text-white"
-                                >
-                                    issueDescription
-                                </label>
-                                <div className="relative">
-                                    <input
-                                        type="text"
-                                        id="issueDescription"
-                                        name="issueDescription"
+                        <div className="grid gap-y-4" />
+                        {/* Form Group */}
+                        <div>
+                            <label
+                                htmlFor="name"
+                                className="block text-sm mb-2 dark:text-white"
+                            >
+                                issueDescription
+                            </label>
+                            <div className="relative">
+                                <input
+                                    type="text"
+                                    id="issueDescription"
+                                    name="issueDescription"
 
-                                        onChange={signupForm.handleChange}
-                                        value={signupForm.values.issueDescription}
-                                        className="py-2.5 sm:py-3 px-4 block w-full border-gray-200 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600"
-                                        required=""
-                                        aria-describedby="issueDescription-error"
-                                    />
-                                    <div className="hidden absolute inset-y-0 end-0 pointer-events-none pe-3">
-                                        <svg
-                                            className="size-5 text-red-500"
-                                            width={16}
-                                            height={16}
-                                            fill="currentColor"
-                                            viewBox="0 0 16 16"
-                                            aria-hidden="true"
-                                        >
-                                            <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z" />
-                                        </svg>
-                                    </div>
+                                    onChange={signupForm.handleChange}
+                                    value={signupForm.values.issueDescription}
+                                    className="py-2.5 sm:py-3 px-4 block w-full border-gray-200 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600"
+                                    required=""
+                                    aria-describedby="issueDescription-error"
+                                />
+                                <div className="hidden absolute inset-y-0 end-0 pointer-events-none pe-3">
+                                    <svg
+                                        className="size-5 text-red-500"
+                                        width={16}
+                                        height={16}
+                                        fill="currentColor"
+                                        viewBox="0 0 16 16"
+                                        aria-hidden="true"
+                                    >
+                                        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z" />
+                                    </svg>
                                 </div>
-                                {
-                                    (signupForm.errors.issueDescription && signupForm.touched.issueDescription) && (
-                                        <p className="text-xs text-red-600 mt-2">
-                                            {signupForm.errors.issueDescription}
-                                        </p>
-                                    )
-                                }
                             </div>
-                            {/* End Form Group */}
-                            {/* Form Group */}
-                            <div>
-                                <label
-                                    htmlFor="os"
-                                    className="block text-sm mb-2 dark:text-white"
-                                > Os
-                                </label>
-                                <div className="relative">
-                                    <input
-                                        type="text"
-                                        id="os"
-                                        name="os"
-                                        onChange={signupForm.handleChange}
-                                        value={signupForm.values.os}
-                                        className="py-2.5 sm:py-3 px-4 block w-full border-gray-200 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600"
-                                        required=""
-                                        aria-describedby="os-error"
-                                    />
-                                    <div className="hidden absolute inset-y-0 end-0 pointer-events-none pe-3">
-                                        <svg
-                                            className="size-5 text-red-500"
-                                            width={16}
-                                            height={16}
-                                            fill="currentColor"
-                                            viewBox="0 0 16 16"
-                                            aria-hidden="true"
-                                        >
-                                            <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z" />
-                                        </svg>
-                                    </div>
+                            {
+                                (signupForm.errors.issueDescription && signupForm.touched.issueDescription) && (
+                                    <p className="text-xs text-red-600 mt-2">
+                                        {signupForm.errors.issueDescription}
+                                    </p>
+                                )
+                            }
+                        </div>
+                        {/* End Form Group */}
+                        {/* Form Group */}
+                        <div>
+                            <label
+                                htmlFor="os"
+                                className="block text-sm mb-2 dark:text-white"
+                            > Os
+                            </label>
+                            <div className="relative">
+                                <input
+                                    type="text"
+                                    id="os"
+                                    name="os"
+                                    onChange={signupForm.handleChange}
+                                    value={signupForm.values.os}
+                                    className="py-2.5 sm:py-3 px-4 block w-full border-gray-200 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600"
+                                    required=""
+                                    aria-describedby="os-error"
+                                />
+                                <div className="hidden absolute inset-y-0 end-0 pointer-events-none pe-3">
+                                    <svg
+                                        className="size-5 text-red-500"
+                                        width={16}
+                                        height={16}
+                                        fill="currentColor"
+                                        viewBox="0 0 16 16"
+                                        aria-hidden="true"
+                                    >
+                                        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z" />
+                                    </svg>
                                 </div>
-                                {
-                                    (signupForm.errors.os && signupForm.touched.os) && (
-                                        <p className="text-xs text-red-600 mt-2">
-                                            {signupForm.errors.os}
-                                        </p>
-                                    )
-                                }
                             </div>
-                            {/* End Form Group */}
-                            {/* Form Group */}
-                            <div>
-                                <label
-                                    htmlFor=" category"
-                                    className="block text-sm mb-2 dark:text-white"
-                                >
-                                    category
-                                </label>
-                                <div className="relative">
-                                    <input
-                                        type="text"
-                                        id="category"
-                                        name="category"
-                                        onChange={signupForm.handleChange}
-                                        value={signupForm.values. category}
-                                        className="py-2.5 sm:py-3 px-4 block w-full border-gray-200 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600"
-                                        required=""
-                                        aria-describedby=" category-error"
-                                    />
-                                    <div className="hidden absolute inset-y-0 end-0 pointer-events-none pe-3">
-                                        <svg
-                                            className="size-5 text-red-500"
-                                            width={16}
-                                            height={16}
-                                            fill="currentColor"
-                                            viewBox="0 0 16 16"
-                                            aria-hidden="true"
-                                        >
-                                            <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z" />
-                                        </svg>
-                                    </div>
+                            {
+                                (signupForm.errors.os && signupForm.touched.os) && (
+                                    <p className="text-xs text-red-600 mt-2">
+                                        {signupForm.errors.os}
+                                    </p>
+                                )
+                            }
+                        </div>
+                        {/* End Form Group */}
+                        {/* Form Group */}
+                        <div>
+                            <label
+                                htmlFor=" category"
+                                className="block text-sm mb-2 dark:text-white"
+                            >
+                                category
+                            </label>
+                            <div className="relative">
+                                <input
+                                    type="text"
+                                    id="category"
+                                    name="category"
+                                    onChange={signupForm.handleChange}
+                                    value={signupForm.values.category}
+                                    className="py-2.5 sm:py-3 px-4 block w-full border-gray-200 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600"
+                                    required=""
+                                    aria-describedby=" category-error"
+                                />
+                                <div className="hidden absolute inset-y-0 end-0 pointer-events-none pe-3">
+                                    <svg
+                                        className="size-5 text-red-500"
+                                        width={16}
+                                        height={16}
+                                        fill="currentColor"
+                                        viewBox="0 0 16 16"
+                                        aria-hidden="true"
+                                    >
+                                        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z" />
+                                    </svg>
                                 </div>
-                                {
-                                    (signupForm.errors.category && signupForm.touched.category) && (
-                                        <p className="text-xs text-red-600 mt-2">
-                                            {signupForm.errors. category}
-                                        </p>
-                                    )
-                                }
                             </div>
-                            {/* End Form Group */}
-                            {/* Form Group */}
-                            <div>
-                                <label
-                                    htmlFor="browser"
-                                    className="block text-sm mb-2 dark:text-white"
-                                >
-                                    browser
-                                </label>
-                                <div className="relative">
-                                    <input
-                                        type="text"
-                                        id="browser"
-                                        name="browser"
-                                        onChange={signupForm.handleChange}
-                                        value={signupForm.values. browser }
-                                        className="py-2.5 sm:py-3 px-4 block w-full border-gray-200 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600"
-                                        required=""
-                                        aria-describedby="  browser-error"
-                                        />
-                                    <div className="hidden absolute inset-y-0 end-0 pointer-events-none pe-3">
-                                        <svg
-                                            className="size-5 text-red-500"
-                                            width={16}
-                                            height={16}
-                                            fill="currentColor"
-                                            viewBox="0 0 16 16"
-                                            aria-hidden="true"
-                                        >
-                                            <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z" />
-                                        </svg>
-                                    </div>
+                            {
+                                (signupForm.errors.category && signupForm.touched.category) && (
+                                    <p className="text-xs text-red-600 mt-2">
+                                        {signupForm.errors.category}
+                                    </p>
+                                )
+                            }
+                        </div>
+                        {/* End Form Group */}
+                        {/* Form Group */}
+                        <div>
+                            <label
+                                htmlFor="browser"
+                                className="block text-sm mb-2 dark:text-white"
+                            >
+                                browser
+                            </label>
+                            <div className="relative">
+                                <input
+                                    type="text"
+                                    id="browser"
+                                    name="browser"
+                                    onChange={signupForm.handleChange}
+                                    value={signupForm.values.browser}
+                                    className="py-2.5 sm:py-3 px-4 block w-full border-gray-200 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600"
+                                    required=""
+                                    aria-describedby="  browser-error"
+                                />
+                                <div className="hidden absolute inset-y-0 end-0 pointer-events-none pe-3">
+                                    <svg
+                                        className="size-5 text-red-500"
+                                        width={16}
+                                        height={16}
+                                        fill="currentColor"
+                                        viewBox="0 0 16 16"
+                                        aria-hidden="true"
+                                    >
+                                        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z" />
+                                    </svg>
                                 </div>
-                                {
-                                    (signupForm.errors.browser && signupForm.touched.browser) && (
-                                        <p className="text-xs text-red-600 mt-2">
-                                            {signupForm.errors.browser}
-                                             </p>
-                                    )
-                                }
-                            
+                            </div>
+                            {
+                                (signupForm.errors.browser && signupForm.touched.browser) && (
+                                    <p className="text-xs text-red-600 mt-2">
+                                        {signupForm.errors.browser}
+                                    </p>
+                                )
+                            }
+
                             <div>
                                 <label
                                     htmlFor="website"

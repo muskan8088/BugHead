@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');// impacting the cors module to wnable cross-origin
 const UserRouter = require('./routers/userRouter');
 const WebsiteRouter = require('./routers/websiteRouter')
+const IssueRouter = require('./routers/issueRouter')
 
 // const ProductRouter = require('./routers/productRouter');
 const app = express(); //creating an instance of an express appliction
@@ -16,7 +17,7 @@ app.use(cors({
 app.use(express.json()); //Middleware to parse JSON
 app.use('/user', UserRouter);
 app.use('/website', WebsiteRouter)
-
+app.use('/issue',IssueRouter)
 // app.use(express.json());
 //Routing
 
