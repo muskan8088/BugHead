@@ -1,10 +1,11 @@
 const { Schema, model, Types } = require('../connection');
 
 const issueSchema = new Schema({
+    ownerID : {type: Types.ObjectId, ref: "websites"},
     issueDescription: String,
     os: String,
     category: String,
-    website: { type: Types.ObjectId, ref: Types.ObjectId },
+    website: String,
     browser: String,
     createdAt: { type: Date, default: Date.now }
 })
