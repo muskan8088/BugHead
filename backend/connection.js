@@ -14,4 +14,4 @@ mongoose.connect(url)
 module.exports = mongoose;
 
 //this file establishes a connection to the MongoDB database using Mongoose.
-// It reads the database URL from enviourment variables and logs the connection satatus.
+// It reads the database URL from enviourment variables and logs the connection status.
