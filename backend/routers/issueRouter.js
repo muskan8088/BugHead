@@ -1,5 +1,7 @@
 const express = require('express');
 const Issue = require('../models/issuemodel'); // Import the model
+
+require('dotenv').config();
 const router = express.Router();
 
 // Create a new website

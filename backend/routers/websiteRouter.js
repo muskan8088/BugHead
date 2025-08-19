@@ -1,5 +1,7 @@
 const express = require('express');
 const Website = require('../models/websitemodel'); // Import the model
+
+require('dotenv').config();
 const router = express.Router();
 
 // Create a new website
@@ -64,5 +66,7 @@ router.delete('/delete/:id', async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 });
+
+
 
 module.exports = router;
