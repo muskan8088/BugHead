@@ -1,20 +1,24 @@
 'use client';
 import axios from 'axios';
 import { useFormik } from 'formik';
-import React from 'react';
+import React,{useState} from 'react';
 import toast from 'react-hot-toast';
 import * as Yup from 'yup';
 
 const SignUpSchema = Yup.object().shape({
-  issueDescription: Yup.string().required('Issue Description is required'),
+  issueDescription: Yup.string()
+  .min(2, 'Too short !!')
+  .max(30, 'Too Long !!')
+  .required('issueDescription is required'),
   os: Yup.string().required('OS is required'),
   category: Yup.string().required('Category is required'),
-  browser: Yup.string().required('Browser is required'),
-  website: Yup.string().required('Website is required'),
+  browser: Yup.string(),
+  website: Yup.string().url('invalid url').required('website is required'),
 });
 
 const App = () => {
-  const signupForm = useFormik({
+  const [openForm,setOpenForm] = useState(false);
+  constsignupForm = useFormik({
     initialValues: {
       issueDescription: '',
       os: '',

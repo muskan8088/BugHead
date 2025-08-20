@@ -10,4 +10,4 @@ const issueSchema = new Schema({
     createdAt: { type: Date, default: Date.now }
 })
 
-module.exports = model('issue', issueSchema);
+module.exports = model('issue', issueSchema)

@@ -54,12 +54,13 @@ export const ManageWebsite
                             <table>
                                 <thead className='bg-white text-pink-600'>
                                     <tr >
-                                        <th className='p-4'>owner</th>
+                                        <th className='p-4'>Owner</th>
                                         <th className='p-4'>Name</th>
-                                        <th className='p-4'></th>
+                                        
                                         <th className='p-4'>Repository</th>
                                         <th className='p-4'>Website</th>
-                                        <th className='p-4'>action</th>
+                                        <th className='p-4'>Registered at</th>
+                                        <th className='p-4'>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody className='text-white bg-pink-400'>
@@ -69,20 +70,22 @@ export const ManageWebsite
                                                 <tr key={user._id} className='border-b-2'>
                                                     <td className='p-4'>{user._id}</td>
                                                     <td className='p-4'>{user.name}</td>
-                                                    <td className='p-4'>{user.email}</td>
-                                                    <td className='p-4'>{user.createdAt}</td>
+                                                    
+                                                    <td className='p-4'>{user.repository}</td>
+                                                    <td className='p-4'>{user.website}</td>
+                                                    <td className='p-4'>{new Date(user.createdAt).toLocaleDateString()}</td>
                                                     <td className='p-4'>
                                                         <button className='px-4 py-2 bg-white text-pink-600 border-2 rounded-2xl border-pink-600 mr-2'>
-                                                            {/* <Link href={`/admin/update-user/${user._id}`}> */}
+                                                            <Link href={`/admin/update-user/${user._id}`}>
                                                             <IconPencilCheck/>
-                                                            {/* </Link> */}
+                                                            </Link>
                                                             </button>
                                                         <button className='px-4 py-2 bg-white text-pink-600 border-2 rounded-2xl border-pink-600 ml-3'
                                                         onClick={()=>{deleteUser(user._id)}}>
-                                                            {/* //<Link href={`/update-user/${user._id}`}> */}
+                                                            <Link href={`/update-user/${user._id}`}>
 
                                                             <IconTrash/>
-                                                            
+                                                            </Link>
                                                         </button>
                                                     </td>
                                                 </tr>
