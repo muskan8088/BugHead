@@ -54,11 +54,12 @@ export const ManageWebsite
                             <table>
                                 <thead className='bg-white text-pink-600'>
                                     <tr >
-                                        <th className='p-4'>User Id</th>
+                                        <th className='p-4'>owner</th>
                                         <th className='p-4'>Name</th>
-                                        <th className='p-4'>Owner</th>
+                                        <th className='p-4'></th>
                                         <th className='p-4'>Repository</th>
                                         <th className='p-4'>Website</th>
+                                        <th className='p-4'>action</th>
                                     </tr>
                                 </thead>
                                 <tbody className='text-white bg-pink-400'>
