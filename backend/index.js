@@ -17,9 +17,13 @@ app.use(cors({
 app.use(express.json()); //Middleware to parse JSON
 app.use('/user', UserRouter);
 app.use('/website', WebsiteRouter)
-app.use('/issue',IssueRouter)
+app.use('/issue', IssueRouter)
 // app.use(express.json());
 //Routing
+// app.get("/issue/user/:id", async (req, res) => {
+//     const issues = await Issue.find({ userId: req.params.id });
+//     res.json(issues);
+// });
 
 app.get('/', (req, res) => {
     res.send('Response from the server');  //sending a response when the root URL is accessed
