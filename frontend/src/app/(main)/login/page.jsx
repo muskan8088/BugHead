@@ -14,18 +14,16 @@ const Login = () => {
             password: '',
 
         },
-        onSubmit: (values) => {
+        onSubmit: async (values, { resetForm }) => {
             console.log(values);
-            axios.post(`${process.env.NEXT_PUBLIC_API_URL}/user/add`, values)
-                .then((result) => {
-                    toast.success('Login Successful...!!')
-                    localStorage.setItem('token', result.data.token)
-                    router.push('/');
-                }).catch((err) => {
-                    toast.error('Oops...Login Failed...!!');
-                    console.log(err);
-                });
-
+            const res = await axios.post(`http://localhost:5000/user/authenticate`, values);
+            console.log(res.data)
+            if (res.data?.token) {
+                localStorage.setItem('token', res.data.token)
+                toast.success("success")
+                resetForm()
+                router.push("/")
+            }
         }
     })
     return (
