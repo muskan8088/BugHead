@@ -19,7 +19,9 @@ const Login = () => {
         onSubmit: (values) => {
             console.log(values);
             const id= '68afdcdf1af77ec4709107c8'
-            axios.get(`http://localhost:5000/user/getbyId/${id}`, values)
+            axios.get(`${process.env.NEXT_PUBLIC_API_URL}/user/getuser`, { headers: {
+                Authorization: `Bearer ${token}`
+            }})
                 .then((result) => {
                     toast.success('Login Successful...!!')
                     localStorage.setItem('token', result.data.token)
