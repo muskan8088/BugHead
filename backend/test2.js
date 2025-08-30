@@ -9,7 +9,7 @@ const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
 const OWNER = "namita2003"; // replace
 const REPO = "mern"; // replace
-const ISSUE_NUMBER = 1; // replace with issue number
+const ISSUE_NUMBER = 2; // replace with issue number
 
 // Gemini setup
 const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);

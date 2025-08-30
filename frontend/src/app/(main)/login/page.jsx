@@ -8,6 +8,8 @@ import toast from 'react-hot-toast';
 const Login = () => {
 
     const router = useRouter();
+    //localStorage.setItem("token", response.data.token);
+
     const loginForm = useFormik({
         initialValues: {
             email: '',
@@ -16,7 +18,8 @@ const Login = () => {
         },
         onSubmit: (values) => {
             console.log(values);
-            axios.post(`${process.env.NEXT_PUBLIC_API_URL}/user/add`, values)
+            const id= '68afdcdf1af77ec4709107c8'
+            axios.get(`http://localhost:5000/user/getbyId/${id}`, values)
                 .then((result) => {
                     toast.success('Login Successful...!!')
                     localStorage.setItem('token', result.data.token)
