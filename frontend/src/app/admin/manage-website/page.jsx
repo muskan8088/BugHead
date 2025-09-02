@@ -2,6 +2,7 @@
 import { IconPencilCheck, IconTrash } from '@tabler/icons-react';
 import axios from 'axios';
 import Link from 'next/link';
+import { PlugIcon } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 import toast from 'react-hot-toast';
 
@@ -21,23 +22,23 @@ export const ManageWebsite
 
         useEffect(() => {//one time re render
 
-            
+
             fetchWebsites()
 
         }, []);
 
-        const deleteUser= async(userId)=>{
+        const deleteUser = async (userId) => {
 
-                const res = await axios.delete(`http://localhost:5000/website/delete/${userId}`);
-                if(res.status===200){
-                    toast.success("user deleted successfully");
-                    fetchWebsites();
-                }else{
-                    toast.error('error to delete user');
-                    console.log('error deleting user:',res.data);
-                    
-                }
+            const res = await axios.delete(`http://localhost:5000/website/delete/${userId}`);
+            if (res.status === 200) {
+                toast.success("user deleted successfully");
+                fetchWebsites();
+            } else {
+                toast.error('error to delete user');
+                console.log('error deleting user:', res.data);
+
             }
+        }
 
 
         return (
@@ -56,7 +57,7 @@ export const ManageWebsite
                                     <tr >
                                         <th className='p-4'>Owner</th>
                                         <th className='p-4'>Name</th>
-                                        
+
                                         <th className='p-4'>Repository</th>
                                         <th className='p-4'>Website</th>
                                         <th className='p-4'>Registered at</th>
@@ -70,21 +71,27 @@ export const ManageWebsite
                                                 <tr key={user._id} className='border-b-2'>
                                                     <td className='p-4'>{user._id}</td>
                                                     <td className='p-4'>{user.name}</td>
-                                                    
+
                                                     <td className='p-4'>{user.repository}</td>
                                                     <td className='p-4'>{user.website}</td>
                                                     <td className='p-4'>{new Date(user.createdAt).toLocaleDateString()}</td>
                                                     <td className='p-4'>
                                                         <button className='px-4 py-2 bg-white text-pink-600 border-2 rounded-2xl border-pink-600 mr-2'>
-                                                            <Link href={`/admin/update-user/${user._id}`}>
-                                                            <IconPencilCheck/>
+                                                            <Link href={`/user/usePlugin/${user._id}`} className="text-blue-500 hover:text-blue-400">
+                                                                <PlugIcon size={20} />
                                                             </Link>
-                                                            </button>
+                                                        </button>
+
+                                                        <button className='px-4 py-2 bg-white text-pink-600 border-2 rounded-2xl border-pink-600 mr-2'>
+                                                            <Link href={`/admin/update-user/${user._id}`}>
+                                                                <IconPencilCheck />
+                                                            </Link>
+                                                        </button>
                                                         <button className='px-4 py-2 bg-white text-pink-600 border-2 rounded-2xl border-pink-600 ml-3'
-                                                        onClick={()=>{deleteUser(user._id)}}>
+                                                            onClick={() => { deleteUser(user._id) }}>
                                                             <Link href={`/update-user/${user._id}`}>
 
-                                                            <IconTrash/>
+                                                                <IconTrash />
                                                             </Link>
                                                         </button>
                                                     </td>
@@ -99,7 +106,7 @@ export const ManageWebsite
                     }
                 </div>
 
-            </div>
+            </div >
         )
     }
 

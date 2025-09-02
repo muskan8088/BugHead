@@ -17,7 +17,7 @@ app.use(cors({
 app.use(express.json()); //Middleware to parse JSON
 app.use('/user', UserRouter);
 app.use('/website', WebsiteRouter)
-app.use('/issue', IssueRouter)
+app.use('/api/issue', IssueRouter)
 // app.use(express.json());
 //Routing
 // app.get("/issue/user/:id", async (req, res) => {

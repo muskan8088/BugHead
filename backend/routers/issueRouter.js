@@ -1,71 +1,54 @@
 const express = require('express');
-const Issue = require('../models/issuemodel'); // Import the model
+const Issue = require('../models/issuemodel');
+const Website = require('../models/websitemodel');
+const axios = require('axios');
+const authMiddleware = require('../middleware/auth'); // ✅ import middleware
 
-require('dotenv').config();
 const router = express.Router();
 
-// Create a new website
-router.post('/add', async (req, res) => {
+// Add an issue (user must be authenticated)
+router.post('/add', authMiddleware, async (req, res) => {
     try {
-        const issue = new Issue(req.body);
+        const userId = req.user._id; // ✅ get logged-in user from token
+        const issueData = req.body;
+
+        // Find website belonging to this user
+        const website = await Website.findOne({ owner: userId });
+        if (!website) return res.status(404).json({ error: 'No website registered for this user.' });
+
+        if (!website.githubOwner || !website.githubRepo) {
+            return res.status(400).json({ error: 'Website has no GitHub repo configured.' });
+        }
+
+        // Save issue in DB (link website + user)
+        const issue = new Issue({ ...issueData, website: website._id, ownerID: userId });
         const savedIssue = await issue.save();
-        res.status(201).json(savedIssue);
+
+        // GitHub issue
+        const githubToken = process.env.GITHUB_TOKEN;
+        const githubTitle = savedIssue.title || savedIssue.issueDescription || 'No Title';
+        const githubBody = `
+**Issue details:**
+- Website ID: ${website._id}
+- Website Name: ${website.name || 'N/A'}
+- Description: ${savedIssue.issueDescription || 'N/A'}
+- OS: ${savedIssue.os || 'N/A'}
+- Browser: ${savedIssue.browser || 'N/A'}
+- Category: ${savedIssue.category || 'N/A'}
+- Owner ID: ${savedIssue.ownerID || 'N/A'}
+        `;
+
+        const githubResponse = await axios.post(
+            `https://api.github.com/repos/${website.githubOwner}/${website.githubRepo}/issues`,
+            { title: githubTitle, body: githubBody },
+            { headers: { Authorization: `token ${githubToken}`, Accept: 'application/vnd.github+json' } }
+        );
+
+        res.status(201).json({ savedIssue, githubIssue: githubResponse.data });
     } catch (error) {
-        res.status(400).json({ error: error.message });
+        console.error(error.response?.data || error.message);
+        res.status(400).json({ error: error.response?.data || error.message });
     }
 });
-
-// Get all websites
-router.get('/getall', async (req, res) => {
-    try {
-        const issue = await Issue.find().populate('owner'); // Populate owner details
-        res.status(200).json(issue);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-});
-
-// Get a single website by ID
-router.get('/getbyid/:id', async (req, res) => {
-    try {
-        const issue = await Issue.findById(req.params.id).populate('owner');
-        if (!issue) {
-            return res.status(404).json({ error: 'issue not found' });
-        }
-        res.status(200).json(issue);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-});
-
-// Update a website by ID
-router.put('/update/:id', async (req, res) => {
-    try {
-        const updatedIssue = await Website.findByIdAndUpdate(req.params.id, req.body, {
-            new: true,
-            runValidators: true,
-        });
-        if (!updatedIssue) {
-            return res.status(404).json({ error: 'issue not found' });
-        }
-        res.status(200).json(updatedIssue);
-    } catch (error) {
-        res.status(400).json({ error: error.message });
-    }
-});
-
-// Delete a website by ID
-router.delete('/delete/:id', async (req, res) => {
-    try {
-        const deletedIssue = await Website.findByIdAndDelete(req.params.id);
-        if (!deletedIssue) {
-            return res.status(404).json({ error: 'issue not found' });
-        }
-        res.status(200).json({ message: 'issue deleted successfully' });
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-});
-
 
 module.exports = router;

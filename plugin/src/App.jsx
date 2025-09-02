@@ -28,7 +28,7 @@ const App = () => {
         validateOnChange: false,
         validateOnBlur: false,
         onSubmit: (values, { resetForm }) => {
-            axios.post("http://localhost:5000/issue/add", values)
+            axios.post("http://localhost:5000/api/issue/add", values)
                 .then(() => {
                     toast.success("Website registered successfully 🎉");
                     resetForm();
@@ -39,6 +39,14 @@ const App = () => {
                 });
         }
     });
+    const token = localStorage.getItem("token");
+
+    axios.post("http://localhost:5000/api/issue/add", values, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    })
+
 
     return (
         <>
