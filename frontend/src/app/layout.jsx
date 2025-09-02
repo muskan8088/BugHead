@@ -1,6 +1,6 @@
 import "./globals.css";
-import Header from "./components/Header/page"; // adjust path if needed
-import Footer from "./components/Footer/page"; // adjust path if needed
+import Header from "../components/Navbar"; // adjust path if needed
+import Footer from "../components/Footer/page"; // adjust path if needed
 //import "./index.html"
 
 export const metadata = {
@@ -13,7 +13,7 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body>
         {/* ✅ Header will appear on every page */}
-        <Header />
+        
         
         {/* Page content */}
         <main>{children}</main>

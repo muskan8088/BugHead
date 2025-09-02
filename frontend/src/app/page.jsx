@@ -1,13 +1,14 @@
 import React from 'react'
 //import Header from './components/Header/page';
-import About from './components/About/page';
+import About from './(main)/about/page';
+import Header from '../components/Navbar';
 
 
 const Home = () => {
   return (
     <div>
-
-      <About/>
+      <Header />
+      <About />
     </div>
   )
 }
