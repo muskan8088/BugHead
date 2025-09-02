@@ -16,21 +16,16 @@ const Login = () => {
             password: '',
 
         },
-        onSubmit: (values) => {
+        onSubmit: async (values, { resetForm }) => {
             console.log(values);
-            const id= '68afdcdf1af77ec4709107c8'
-            axios.get(`${process.env.NEXT_PUBLIC_API_URL}/user/getuser`, { headers: {
-                Authorization: `Bearer ${token}`
-            }})
-                .then((result) => {
-                    toast.success('Login Successful...!!')
-                    localStorage.setItem('token', result.data.token)
-                    router.push('/');
-                }).catch((err) => {
-                    toast.error('Oops...Login Failed...!!');
-                    console.log(err);
-                });
-
+            const res = await axios.post(`http://localhost:5000/user/authenticate`, values);
+            console.log(res.data)
+            if (res.data?.token) {
+                localStorage.setItem('token', res.data.token)
+                toast.success("success")
+                resetForm()
+                router.push("/")
+            }
         }
     })
     return (
@@ -101,6 +96,7 @@ const Login = () => {
                                         type="email"
                                         id="email"
                                         name="email"
+                                        autoComplete='off'
                                         onChange={loginForm.handleChange}
                                         value={loginForm.values.email}
                                         className="py-2.5 sm:py-3 px-4 block w-full border-gray-200 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600"
@@ -146,6 +142,7 @@ const Login = () => {
                                         type="password"
                                         id="password"
                                         name="password"
+                                        autoComplete='off'
                                         onChange={loginForm.handleChange}
                                         value={loginForm.values.password}
                                         className="py-2.5 sm:py-3 px-4 block w-full border-gray-200 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600"
