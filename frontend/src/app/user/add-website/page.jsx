@@ -2,25 +2,21 @@
 import axios from 'axios';
 import { useFormik } from 'formik';
 import { useRouter } from 'next/navigation';
-import React from 'react'
+import React from 'react';
 import toast from 'react-hot-toast';
 import * as Yup from 'yup';
 
-const SignUpSchema = Yup.object().shape(
-    {
-        name: Yup.string()
-            .min(2, 'Too Short !!')
-            .max(30, 'Too Long !!')
-            .required('Name is required'),
-        owner: Yup.string()
-            .required('Owner is required'),
-        repository: Yup.string().required('repository is required'),
-        website: Yup.string().url('invalid url').required('website is required')
-        
-    }
-)
+const SignUpSchema = Yup.object().shape({
+    name: Yup.string()
+        .min(2, 'Too Short !!')
+        .max(30, 'Too Long !!')
+        .required('Name is required'),
+    owner: Yup.string().required('Owner is required'),
+    repository: Yup.string().required('repository is required'),
+    website: Yup.string().url('invalid url').required('website is required'),
+});
 
-const websiteSignup = () => {
+const WebsiteSignup = () => {
     const router = useRouter();
     const signupForm = useFormik({
         initialValues: {
@@ -28,37 +24,38 @@ const websiteSignup = () => {
             owner: '',
             repository: '',
             website: '',
-            
         },
         onSubmit: (values, { resetForm }) => {
             console.log(values);
 
-            axios.post('http://localhost:5000/website/add', values)
+            axios
+                .post('http://localhost:5000/website/add', values)
                 .then((result) => {
-                    toast.success('website registered successfully');
+                    toast.success('Website registered successfully');
                     resetForm();
-                    //redirect to login page
-                   // router.push('/login')
-                }).catch((err) => {
+                    // router.push('/login');
+                })
+                .catch((err) => {
                     console.log(err);
-                    toast.error('something went wrong!')
+                    toast.error('Something went wrong!');
                 });
         },
         validationSchema: SignUpSchema,
     });
+
     return (
-        <div className=" w-1/4 mx-auto my-18 bg-white border border-gray-200 rounded-xl shadow-2xs dark:bg-neutral-900 dark:border-neutral-700">
-            <div className="p-4 sm:p-7">
+        <div className="w-1/3 mx-auto my-12 bg-white border border-gray-300 rounded-xl shadow-lg">
+            <div className="p-6 sm:p-8">
                 <div className="text-center">
-                    <h1 className="block text-2xl font-bold text-gray-800 dark:text-white">
+                    <h1 className="block text-2xl font-bold text-gray-800">
                         Website Sign up
                     </h1>
-                    
                 </div>
-                <div className="mt-5">
+
+                <div className="mt-6">
                     <button
                         type="button"
-                        className="w-full py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-2xs hover:bg-gray-50 focus:outline-hidden focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-white dark:hover:bg-neutral-800 dark:focus:bg-neutral-800"
+                        className="w-full py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-300 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     >
                         <svg
                             className="w-4 h-auto"
@@ -86,190 +83,107 @@ const websiteSignup = () => {
                         </svg>
                         Sign up with Google
                     </button>
-                    <div className="py-3 flex items-center text-xs text-gray-400 uppercase before:flex-1 before:border-t before:border-gray-200 before:me-6 after:flex-1 after:border-t after:border-gray-200 after:ms-6 dark:text-neutral-500 dark:before:border-neutral-600 dark:after:border-neutral-600">
+
+                    <div className="py-3 flex items-center text-xs text-gray-400 uppercase before:flex-1 before:border-t before:border-gray-300 before:me-6 after:flex-1 after:border-t after:border-gray-300 after:ms-6">
                         Or
                     </div>
+
                     {/* Form */}
                     <form onSubmit={signupForm.handleSubmit}>
                         <div className="grid gap-y-4">
-                            {/* Form Group */}
+                            {/* Name */}
                             <div>
-                                <label
-                                    htmlFor="name"
-                                    className="block text-sm mb-2 dark:text-white"
-                                >
+                                <label htmlFor="name" className="block text-sm mb-2 text-gray-700">
                                     Name
                                 </label>
-                                <div className="relative">
-                                    <input
-                                        type="text"
-                                        id="name"
-                                        name="name"
+                                <input
+                                    type="text"
+                                    id="name"
+                                    name="name"
+                                    onChange={signupForm.handleChange}
+                                    value={signupForm.values.name}
+                                    className="py-2.5 sm:py-3 px-4 block w-full border border-gray-300 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
+                                />
+                                {signupForm.errors.name && signupForm.touched.name && (
+                                    <p className="text-xs text-red-600 mt-2">
+                                        {signupForm.errors.name}
+                                    </p>
+                                )}
+                            </div>
 
-                                        onChange={signupForm.handleChange}
-                                        value={signupForm.values.name}
-                                        className="py-2.5 sm:py-3 px-4 block w-full border-gray-200 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600"
-                                        required=""
-                                        aria-describedby="name-error"
-                                    />
-                                    <div className="hidden absolute inset-y-0 end-0 pointer-events-none pe-3">
-                                        <svg
-                                            className="size-5 text-red-500"
-                                            width={16}
-                                            height={16}
-                                            fill="currentColor"
-                                            viewBox="0 0 16 16"
-                                            aria-hidden="true"
-                                        >
-                                            <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z" />
-                                        </svg>
-                                    </div>
-                                </div>
-                                {
-                                    (signupForm.errors.name && signupForm.touched.name) && (
-                                        <p className="text-xs text-red-600 mt-2">
-                                            {signupForm.errors.name}
-                                        </p>
-                                    )
-                                }
-                            </div>
-                            {/* End Form Group */}
-                            {/* Form Group */}
+                            {/* Owner */}
                             <div>
-                                <label
-                                    htmlFor="owner"
-                                    className="block text-sm mb-2 dark:text-white"
-                                > Owner
+                                <label htmlFor="owner" className="block text-sm mb-2 text-gray-700">
+                                    Owner
                                 </label>
-                                <div className="relative">
-                                    <input
-                                        type="text"
-                                        id="owner"
-                                        name="owner"
-                                        onChange={signupForm.handleChange}
-                                        value={signupForm.values.owner}
-                                        className="py-2.5 sm:py-3 px-4 block w-full border-gray-200 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600"
-                                        required=""
-                                        aria-describedby="email-error"
-                                    />
-                                    <div className="hidden absolute inset-y-0 end-0 pointer-events-none pe-3">
-                                        <svg
-                                            className="size-5 text-red-500"
-                                            width={16}
-                                            height={16}
-                                            fill="currentColor"
-                                            viewBox="0 0 16 16"
-                                            aria-hidden="true"
-                                        >
-                                            <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z" />
-                                        </svg>
-                                    </div>
-                                </div>
-                                {
-                                    (signupForm.errors.owner && signupForm.touched.owner) && (
-                                        <p className="text-xs text-red-600 mt-2">
-                                            {signupForm.errors.owner}
-                                        </p>
-                                    )
-                                }
+                                <input
+                                    type="text"
+                                    id="owner"
+                                    name="owner"
+                                    onChange={signupForm.handleChange}
+                                    value={signupForm.values.owner}
+                                    className="py-2.5 sm:py-3 px-4 block w-full border border-gray-300 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
+                                />
+                                {signupForm.errors.owner && signupForm.touched.owner && (
+                                    <p className="text-xs text-red-600 mt-2">
+                                        {signupForm.errors.owner}
+                                    </p>
+                                )}
                             </div>
-                            {/* End Form Group */}
-                            {/* Form Group */}
+
+                            {/* Repository */}
                             <div>
-                                <label
-                                    htmlFor="repository"
-                                    className="block text-sm mb-2 dark:text-white"
-                                >
+                                <label htmlFor="repository" className="block text-sm mb-2 text-gray-700">
                                     Repository
                                 </label>
-                                <div className="relative">
-                                    <input
-                                        type="text"
-                                        id="repository"
-                                        name="repository"
-                                        onChange={signupForm.handleChange}
-                                        value={signupForm.values.repository}
-                                        className="py-2.5 sm:py-3 px-4 block w-full border-gray-200 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600"
-                                        required=""
-                                        aria-describedby="password-error"
-                                    />
-                                    <div className="hidden absolute inset-y-0 end-0 pointer-events-none pe-3">
-                                        <svg
-                                            className="size-5 text-red-500"
-                                            width={16}
-                                            height={16}
-                                            fill="currentColor"
-                                            viewBox="0 0 16 16"
-                                            aria-hidden="true"
-                                        >
-                                            <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z" />
-                                        </svg>
-                                    </div>
-                                </div>
-                                {
-                                    (signupForm.errors.repository && signupForm.touched.repository) && (
-                                        <p className="text-xs text-red-600 mt-2">
-                                            {signupForm.errors.repository}
-                                        </p>
-                                    )
-                                }
+                                <input
+                                    type="text"
+                                    id="repository"
+                                    name="repository"
+                                    onChange={signupForm.handleChange}
+                                    value={signupForm.values.repository}
+                                    className="py-2.5 sm:py-3 px-4 block w-full border border-gray-300 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
+                                />
+                                {signupForm.errors.repository && signupForm.touched.repository && (
+                                    <p className="text-xs text-red-600 mt-2">
+                                        {signupForm.errors.repository}
+                                    </p>
+                                )}
                             </div>
-                            {/* End Form Group */}
-                            {/* Form Group */}
+
+                            {/* Website */}
                             <div>
-                                <label
-                                    htmlFor="website"
-                                    className="block text-sm mb-2 dark:text-white"
-                                >
+                                <label htmlFor="website" className="block text-sm mb-2 text-gray-700">
                                     Website
                                 </label>
-                                <div className="relative">
-                                    <input
-                                        type="url"
-                                        id="website"
-                                        name="website"
-                                        onChange={signupForm.handleChange}
-                                        value={signupForm.values.website}
-                                        className="py-2.5 sm:py-3 px-4 block w-full border-gray-200 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600"
-                                        required=""
-                                        aria-describedby="confirmPassword-error"
-                                    />
-                                    <div className="hidden absolute inset-y-0 end-0 pointer-events-none pe-3">
-                                        <svg
-                                            className="size-5 text-red-500"
-                                            width={16}
-                                            height={16}
-                                            fill="currentColor"
-                                            viewBox="0 0 16 16"
-                                            aria-hidden="true"
-                                        >
-                                            <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z" />
-                                        </svg>
-                                    </div>
-                                </div>
-                                {
-                                    (signupForm.errors.website && signupForm.touched.website) && (
-                                        <p className="text-xs text-red-600 mt-2">
-                                            {signupForm.errors.website}
-                                        </p>
-                                    )
-                                }
+                                <input
+                                    type="url"
+                                    id="website"
+                                    name="website"
+                                    onChange={signupForm.handleChange}
+                                    value={signupForm.values.website}
+                                    className="py-2.5 sm:py-3 px-4 block w-full border border-gray-300 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
+                                />
+                                {signupForm.errors.website && signupForm.touched.website && (
+                                    <p className="text-xs text-red-600 mt-2">
+                                        {signupForm.errors.website}
+                                    </p>
+                                )}
                             </div>
-                            {/* End Form Group */}
 
+                            {/* Submit */}
                             <button
                                 type="submit"
-                                className="w-full py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-hidden focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none"
+                                className="w-full py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-lg bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
                             >
                                 Sign up
                             </button>
                         </div>
                     </form>
-                    {/* End Form */}
                 </div>
             </div>
         </div>
-    )
-}
+    );
+};
 
-export default websiteSignup
+export default WebsiteSignup;

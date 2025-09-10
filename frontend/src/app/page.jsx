@@ -13,8 +13,8 @@ const Home = () => {
   )
 }
 
-<<<<<<< Updated upstream
+//<<<<<<< Updated upstream
 export default Home;
-=======
-export default page;
->>>>>>> Stashed changes
+// =======
+// export default page;
+// >>>>>>> Stashed changes
