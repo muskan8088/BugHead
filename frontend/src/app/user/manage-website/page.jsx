@@ -77,7 +77,7 @@ export const ManageWebsite
                                                     <td className='p-4'>{new Date(user.createdAt).toLocaleDateString()}</td>
                                                     <td className='p-4'>
                                                         <button className='px-4 py-2 bg-white text-pink-600 border-2 rounded-2xl border-pink-600 mr-2'>
-                                                            <Link href={`/user/usePlugin/${user._id}`} className="text-blue-500 hover:text-blue-400">
+                                                            <Link href={`/user/use-plugin/${user._id}`} className="text-blue-500 hover:text-blue-400">
                                                                 <PlugIcon size={20} />
                                                             </Link>
                                                         </button>

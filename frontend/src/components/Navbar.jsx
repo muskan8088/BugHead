@@ -12,8 +12,8 @@ const Header = () => {
         { href: "/signup", label: "Signup" },
         { href: "/login", label: "Login" },
         { href: "/admin/add-website", label: "Website-Registration" },
-        { href: "/components/About", label: "About" },
-        { href: "/components/Contact", label: "Contact" },
+        { href: "/about", label: "About" },
+        { href: "/contact", label: "Contact" },
     ];
 
     return (
