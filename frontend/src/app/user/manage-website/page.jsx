@@ -120,7 +120,7 @@ const ManageWebsite = () => {
                                                     whileHover={{ scale: 1.1 }}
                                                     whileTap={{ scale: 0.9 }}
                                                     className="text-blue-400 hover:text-blue-300 transition-colors duration-200"
-                                                    onClick={() => router.push(`../websitedetail/page?id=${site._id}`)}
+                                                    onClick={() => router.push(`/user/use-plugin/${site._id}`)}
                                                 >
                                                     <IconPencilCheck size={20} />
                                                 </motion.button>

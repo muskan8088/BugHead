@@ -25,6 +25,8 @@ app.use('/api/issue', IssueRouter)
 //     res.json(issues);
 // });
 
+app.use(express.static('static'));
+
 app.get('/', (req, res) => {
     res.send('Response from the server');  //sending a response when the root URL is accessed
 })
