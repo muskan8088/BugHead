@@ -8,45 +8,68 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Plus } from 'lucide-react';
 import "./index.css";   // ✅ your custom CSS
 
-const SignUpSchema = Yup.object().shape({
+const IssueSchema = Yup.object().shape({
     issueDescription: Yup.string()
-        .min(2, 'Too Short !!')
-        .max(30, 'Too Long !!')
-        .required('issueDescription is required'),
-    os: Yup.string().required('Os is required'),
-    category: Yup.string().required('category is required'),
-    browser: Yup.string(),
-    website: Yup.string().url('invalid url').required('website is required'),
+        .min(5, 'Too Short !!')
+        .max(300, 'Too Long !!')
+        .required('Issue description is required'),
+    os: Yup.string().required('OS is required'),
+    category: Yup.string().required('Category is required'),
+    browser: Yup.string().required('Browser is required'),
+    website: Yup.string().url('Invalid URL').required('Website is required'),
 });
 
-const App = () => {
+const App = ({ websiteId }) => {
     const [openForm, setOpenForm] = useState(false);
 
+    const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
+
     const signupForm = useFormik({
-        initialValues: { issueDescription: '', os: '', category: '', browser: '', website: '' },
-        validationSchema: SignUpSchema,
+        initialValues: {
+            issueDescription: '',
+            os: '',
+            category: '',
+            browser: '',
+            website: ''
+        },
+        validationSchema: IssueSchema,
         validateOnChange: false,
         validateOnBlur: false,
-        onSubmit: (values, { resetForm }) => {
-            axios.post("http://localhost:5000/api/issue/add", values)
-                .then(() => {
-                    toast.success("Website registered successfully 🎉");
-                    resetForm();
-                    setOpenForm(false);
-                })
-                .catch(() => {
-                    toast.error("Something went wrong 😢");
-                });
+        onSubmit: async (values, { resetForm, setSubmitting }) => {
+            if (!token) {
+                toast.error("You must be logged in to report an issue ❌");
+                setSubmitting(false);
+                return;
+            }
+
+            try {
+                // Format issue title like PluginApp does
+                const formattedTitle = `[${values.category}] Bug on ${values.browser} (${values.os})`;
+
+                await axios.post("http://localhost:5000/api/issue/add",
+                    {
+                        ...values,
+                        title: formattedTitle,
+                        websiteId: websiteId,  // ✅ Link issue to specific website
+                    },
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
+                    }
+                );
+
+                toast.success("Issue reported successfully 🎉");
+                resetForm();
+                setOpenForm(false);
+            } catch (error) {
+                console.error("Error reporting issue:", error);
+                toast.error(error.response?.data?.error || "Failed to report issue 😢");
+            } finally {
+                setSubmitting(false);
+            }
         }
     });
-    const token = localStorage.getItem("token");
-
-    axios.post("http://localhost:5000/api/issue/add", values, {
-        headers: {
-            Authorization: `Bearer ${token}`,
-        },
-    })
-
 
     return (
         <>
@@ -73,7 +96,7 @@ const App = () => {
                         <div className="popup-content">
                             {/* Header */}
                             <div className="popup-header">
-                                <h1>🚀 Create Issue</h1>
+                                <h1>🚀 Report an Issue</h1>
                                 <button onClick={() => setOpenForm(false)}>✖</button>
                             </div>
 
@@ -95,7 +118,7 @@ const App = () => {
                                             onChange={signupForm.handleChange}
                                             value={signupForm.values[id]}
                                         />
-                                        {signupForm.errors[id] && signupForm.touched[id] && (
+                                        {signupForm.errors[id] && (
                                             <p className="error-text">{signupForm.errors[id]}</p>
                                         )}
                                     </div>
@@ -116,7 +139,7 @@ const App = () => {
                                         <option value="macOS">🍎 macOS</option>
                                         <option value="Windows">🪟 Windows</option>
                                     </select>
-                                    {signupForm.errors.os && signupForm.touched.os && (
+                                    {signupForm.errors.os && (
                                         <p className="error-text">{signupForm.errors.os}</p>
                                     )}
                                 </div>
@@ -127,8 +150,9 @@ const App = () => {
                                     whileTap={{ scale: 0.95 }}
                                     type="submit"
                                     className="submit-btn"
+                                    disabled={signupForm.isSubmitting}
                                 >
-                                    ✅ Submit
+                                    {signupForm.isSubmitting ? "Submitting..." : "✅ Submit"}
                                 </motion.button>
                             </form>
                         </div>

@@ -5,6 +5,7 @@ const websiteSchema = new Schema({
     owner: { type: Types.ObjectId, ref: "Users", required: true },
     repository: { type: String, required: true },
     website: { type: String },
+    github: { type: String, required: true },
     createdAt: { type: Date, default: Date.now }
 })
 

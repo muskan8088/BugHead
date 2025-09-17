@@ -1,29 +1,39 @@
 const express = require('express');
 const Website = require('../models/websitemodel'); // Import the model
-
+const verifyToken = require("../middleware/auth");
 require('dotenv').config();
 const router = express.Router();
 
 // Create a new website
-router.post('/add', async (req, res) => {
+router.post("/add", verifyToken, async (req, res) => {
+    console.log("User from token:", req.user);
     try {
-        const website = new Website(req.body);
+        const website = new Website({
+            ...req.body,
+            owner: req.user._id, // ✅ Fix: match schema
+        });
         const savedWebsite = await website.save();
         res.status(201).json(savedWebsite);
     } catch (error) {
+        console.error("Error adding website:", error);
         res.status(400).json({ error: error.message });
     }
 });
 
-// Get all websites
-router.get('/getall', async (req, res) => {
+router.get("/getall", verifyToken, async (req, res) => {
     try {
-        const websites = await Website.find().populate('owner'); // Populate owner details
+        const websites = await Website.find({ owner: req.user._id }); // ✅ Fix: match schema
         res.status(200).json(websites);
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        console.error("Error fetching websites:", error);
+        res.status(500).json({ error: "Internal server error", details: error.message });
     }
 });
+
+
+
+
+
 
 // Get a single website by ID
 router.get('/getbyid/:id', async (req, res) => {
@@ -64,6 +74,14 @@ router.delete('/delete/:id', async (req, res) => {
         res.status(200).json({ message: 'Website deleted successfully' });
     } catch (error) {
         res.status(500).json({ error: error.message });
+    }
+});
+router.get("/getuserwebsites", verifyToken, async (req, res) => {
+    try {
+        const websites = await WebsiteModel.find({ userId: req.user._id });
+        res.status(200).json(websites);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
     }
 });
 

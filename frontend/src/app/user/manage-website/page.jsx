@@ -1,113 +1,148 @@
-'use client'
+'use client';
 import { IconPencilCheck, IconTrash } from '@tabler/icons-react';
 import axios from 'axios';
-import Link from 'next/link';
-import { PlugIcon } from 'lucide-react'
-import React, { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation';
+import React, { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
+import { motion } from 'framer-motion';
 
-export const ManageWebsite
-    = () => {
+const ManageWebsite = () => {
+    const router = useRouter();
+    const [loading, setLoading] = useState(false);
+    const [websiteList, setWebsiteList] = useState([]);
 
-        const [loading, setLoading] = useState(false);
-        const [websiteList, setWebsiteList] = useState([]);
-
-        const fetchWebsites = async () => {
+    const fetchWebsites = async () => {
+        try {
             setLoading(true);
-            const res = await axios.get('http://localhost:5000/website/getall')//it will ensure filling up of data before going further into programming function.
-            console.log(res.data);
-            setWebsiteList(res.data);//assuming the response is an array of user objects.
+            const token = localStorage.getItem("token");
+            console.log("Token being sent:", token);
+
+            if (!token) {
+                toast.error("No token found. Please login again.");
+                setLoading(false);
+                return;
+            }
+
+            const res = await axios.get("http://localhost:5000/website/getall", {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+
+            setWebsiteList(res.data);
+            setLoading(false);
+        } catch (error) {
+            console.error("Error fetching websites:", error);
+            toast.error("Failed to load websites");
             setLoading(false);
         }
+    };
 
-        useEffect(() => {//one time re render
+    useEffect(() => {
+        fetchWebsites();
+    }, []);
 
+    const deleteWebsite = async (websiteId) => {
+        try {
+            const token = localStorage.getItem("token");
+            const res = await axios.delete(
+                `http://localhost:5000/website/delete/${websiteId}`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
 
-            fetchWebsites()
-
-        }, []);
-
-        const deleteUser = async (userId) => {
-
-            const res = await axios.delete(`http://localhost:5000/website/delete/${userId}`);
             if (res.status === 200) {
-                toast.success("user deleted successfully");
-                fetchWebsites();
-            } else {
-                toast.error('error to delete user');
-                console.log('error deleting user:', res.data);
-
+                toast.success("Website deleted successfully");
+                fetchWebsites(); // refresh after delete
             }
+        } catch (err) {
+            toast.error("Error deleting website");
+            console.error("Delete error:", err);
         }
+    };
 
-
-        return (
-            <div className='bg-pink-200  min-h-screen py-16'>
-
-                <h1 className='text-center font-bold text-3xl text-pink-600 underline decoration-pink-600 decoration-dashed'>Manage Websites</h1>
-                <div className='flex justify-center items-center m-8'>
-                    {
-
-                        loading ? (
-                            <p>Loading...Please wait...!</p>
-                        ) : (
-
-                            <table>
-                                <thead className='bg-white text-pink-600'>
-                                    <tr >
-                                        <th className='p-4'>Owner</th>
-                                        <th className='p-4'>Name</th>
-
-                                        <th className='p-4'>Repository</th>
-                                        <th className='p-4'>Website</th>
-                                        <th className='p-4'>Registered at</th>
-                                        <th className='p-4'>Action</th>
+    return (
+        <div className="bg-slate-900 min-h-screen py-16 px-8 text-slate-300">
+            <h1 className="text-center font-extrabold text-5xl text-white mb-10 tracking-wider">
+                Manage Your Websites
+            </h1>
+            <div className="flex justify-center items-center">
+                {loading ? (
+                    <p className="text-slate-400 text-xl">Loading... Please wait...</p>
+                ) : websiteList.length === 0 ? (
+                    <div className="bg-slate-800 p-8 rounded-xl shadow-lg text-center max-w-lg w-full">
+                        <p className="text-xl font-semibold text-slate-400">No websites found.</p>
+                        <p className="mt-2 text-sm text-slate-500">Add a new website to get started.</p>
+                    </div>
+                ) : (
+                    <div className="w-full max-w-5xl overflow-hidden rounded-xl shadow-2xl bg-slate-800 border border-slate-700">
+                        <table className="min-w-full divide-y divide-slate-700">
+                            <thead className="bg-slate-700">
+                                <tr>
+                                    <th className="px-6 py-3 text-left text-xs font-semibold text-slate-300 uppercase tracking-wider">
+                                        Name
+                                    </th>
+                                    <th className="px-6 py-3 text-left text-xs font-semibold text-slate-300 uppercase tracking-wider">
+                                        Website
+                                    </th>
+                                    <th className="px-6 py-3 text-left text-xs font-semibold text-slate-300 uppercase tracking-wider">
+                                        Repository
+                                    </th>
+                                    <th className="px-6 py-3 text-left text-xs font-semibold text-slate-300 uppercase tracking-wider">
+                                        GitHub Repo Link
+                                    </th>
+                                    <th className="px-6 py-3 text-left text-xs font-semibold text-slate-300 uppercase tracking-wider">
+                                        Registered at
+                                    </th>
+                                    <th className="px-6 py-3 text-left text-xs font-semibold text-slate-300 uppercase tracking-wider">
+                                        Actions
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody className="bg-slate-800 divide-y divide-slate-700">
+                                {websiteList.map((site) => (
+                                    <tr key={site._id} className="transition-all duration-300 hover:bg-slate-700">
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-300">{site.name}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-blue-400">
+                                            <a href={site.website} target="_blank" rel="noopener noreferrer" className="hover:underline">{site.website}</a>
+                                        </td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-300">{site.repository}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-blue-400">
+                                            <a href={site.github} target="_blank" rel="noopener noreferrer" className="hover:underline">{site.github}</a>
+                                        </td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-300">
+                                            {new Date(site.createdAt).toLocaleDateString()}
+                                        </td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                            <div className="flex items-center space-x-2">
+                                                <motion.button
+                                                    whileHover={{ scale: 1.1 }}
+                                                    whileTap={{ scale: 0.9 }}
+                                                    className="text-blue-400 hover:text-blue-300 transition-colors duration-200"
+                                                    onClick={() => router.push(`../websitedetail/page?id=${site._id}`)}
+                                                >
+                                                    <IconPencilCheck size={20} />
+                                                </motion.button>
+                                                <motion.button
+                                                    whileHover={{ scale: 1.1 }}
+                                                    whileTap={{ scale: 0.9 }}
+                                                    className="text-red-400 hover:text-red-300 transition-colors duration-200"
+                                                    onClick={() => deleteWebsite(site._id)}
+                                                >
+                                                    <IconTrash size={20} />
+                                                </motion.button>
+                                            </div>
+                                        </td>
                                     </tr>
-                                </thead>
-                                <tbody className='text-white bg-pink-400'>
-                                    {
-                                        websiteList.map((user) => {
-                                            return (
-                                                <tr key={user._id} className='border-b-2'>
-                                                    <td className='p-4'>{user._id}</td>
-                                                    <td className='p-4'>{user.name}</td>
-
-                                                    <td className='p-4'>{user.repository}</td>
-                                                    <td className='p-4'>{user.website}</td>
-                                                    <td className='p-4'>{new Date(user.createdAt).toLocaleDateString()}</td>
-                                                    <td className='p-4'>
-                                                        <button className='px-4 py-2 bg-white text-pink-600 border-2 rounded-2xl border-pink-600 mr-2'>
-                                                            <Link href={`/user/usePlugin/${user._id}`} className="text-blue-500 hover:text-blue-400">
-                                                                <PlugIcon size={20} />
-                                                            </Link>
-                                                        </button>
-
-                                                        <button className='px-4 py-2 bg-white text-pink-600 border-2 rounded-2xl border-pink-600 mr-2'>
-                                                            <Link href={`/admin/update-user/${user._id}`}>
-                                                                <IconPencilCheck />
-                                                            </Link>
-                                                        </button>
-                                                        <button className='px-4 py-2 bg-white text-pink-600 border-2 rounded-2xl border-pink-600 ml-3'
-                                                            onClick={() => { deleteUser(user._id) }}>
-                                                            <Link href={`/update-user/${user._id}`}>
-
-                                                                <IconTrash />
-                                                            </Link>
-                                                        </button>
-                                                    </td>
-                                                </tr>
-                                            )
-                                        })
-                                    }
-                                </tbody>
-                            </table>
-                        )
-
-                    }
-                </div>
-
-            </div >
-        )
-    }
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                )}
+            </div>
+        </div>
+    );
+};
 
 export default ManageWebsite;
