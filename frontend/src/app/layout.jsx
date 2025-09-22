@@ -1,6 +1,6 @@
 import "./globals.css";
 import Header from "../components/Navbar"; // adjust path if needed
-import Footer from "../components/Footer/page"; // adjust path if needed
+import Footer from "../components/Footer"; // adjust path if needed
 //import "./index.html"
 
 export const metadata = {

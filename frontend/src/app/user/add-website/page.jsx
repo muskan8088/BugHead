@@ -34,9 +34,18 @@ const WebsiteSignup = () => {
                     return;
                 }
 
+                // Split the repository string to get githubOwner and githubRepo
+                const repoUrlParts = values.github.split('/');
+                const githubOwner = repoUrlParts[repoUrlParts.length - 2];
+                const githubRepo = repoUrlParts[repoUrlParts.length - 1];
+
                 const res = await axios.post(
                     'http://localhost:5000/website/add',
-                    values,
+                    {
+                        ...values,
+                        githubOwner,
+                        githubRepo,
+                    },
                     {
                         headers: {
                             Authorization: `Bearer ${token}`,

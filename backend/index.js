@@ -1,40 +1,29 @@
 const express = require('express');
-const cors = require('cors');// impacting the cors module to wnable cross-origin
-const UserRouter = require('./routers/userRouter');
-const WebsiteRouter = require('./routers/websiteRouter')
-const IssueRouter = require('./routers/issueRouter')
+const cors = require('cors');
+const mongoose = require('mongoose');
+require('dotenv').config();
 
-// const ProductRouter = require('./routers/productRouter');
-const app = express(); //creating an instance of an express appliction
+// ✅ Import routers
+const userRouter = require('./routers/userRouter');
+const websiteRouter = require('./routers/websiteRouter');
+const issueRouter = require('./routers/issueRouter');
 
-const PORT = 5000;  //defining the port number for the server
+const app = express();
+const port = process.env.PORT || 5000;
 
-// Middleware
+// ✅ Middleware
+app.use(express.json()); // Parses incoming JSON requests
+app.use(cors()); // Enables Cross-Origin Resource Sharing
 
-app.use(cors({
-    origin: '*', //allowing request from any origin.
-}))
-app.use(express.json()); //Middleware to parse JSON
-app.use('/user', UserRouter);
-app.use('/website', WebsiteRouter)
-app.use('/api/issue', IssueRouter)
-// app.use(express.json());
-//Routing
-// app.get("/issue/user/:id", async (req, res) => {
-//     const issues = await Issue.find({ userId: req.params.id });
-//     res.json(issues);
-// });
+// ✅ Route mounting
+// Mount each router at its respective base path
+app.use('/user', userRouter);
+app.use('/website', websiteRouter);
+app.use('/issue', issueRouter);
 
 app.use(express.static('static'));
 
-app.get('/', (req, res) => {
-    res.send('Response from the server');  //sending a response when the root URL is accessed
-})
-
-app.get('/add', (req, res) => {
-    res.send('Response from the Add Route');
-})
-
-app.listen(PORT, () => {
-    console.log('server is running on port -' + PORT) // logging a message when the server starts.
-})
+// Start the server
+app.listen(port, () => {
+    console.log(`Server is running on port ${port}`);
+});

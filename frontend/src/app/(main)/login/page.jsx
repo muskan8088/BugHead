@@ -19,6 +19,9 @@ const Login = () => {
             console.log(res.data);
             if (res.data?.token) {
                 localStorage.setItem('token', res.data.token);
+                if (res.data.userId) {
+                    localStorage.setItem('userId', res.data.userId);
+                }
                 toast.success("success");
                 resetForm();
                 router.push("/user/Dashboard");
