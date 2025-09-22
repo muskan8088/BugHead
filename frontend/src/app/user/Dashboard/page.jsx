@@ -4,7 +4,7 @@ import Sidebar from '../../../components/Sidebar';
 import ManageWebsite from '../manage-website/page';
 import WebsiteSignup from '../add-website/page';
 import ProfileSection from '../profile/ProfileSection';
-import GeneratePluginPage from '../generate-plugin/GeneratePluginPage'; 
+import GeneratePluginPage from '../generate-plugin/page'; 
 
 const Dashboard = () => {
     const [activeTab, setActiveTab] = useState("websites");

@@ -34,16 +34,52 @@ const WebsiteSignup = () => {
                     return;
                 }
 
+                let githubOwner;
+                let githubRepo;
+                
+                try {
+                    // Parse the GitHub URL
+                    const githubUrl = new URL(values.github);
+                    const pathParts = githubUrl.pathname.split('/').filter(part => part.length > 0);
+                    
+                    // Ensure the URL has at least two parts (owner and repo)
+                    if (pathParts.length < 2) {
+                        toast.error('Invalid GitHub URL format. Please provide a link to a repository.');
+                        return; // Stop execution here
+                    }
+                    
+                    githubOwner = pathParts[0];
+                    githubRepo = pathParts[1];
+
+                    console.log(`Parsed GitHub Owner: ${githubOwner}, Repo: ${githubRepo}`);
+                    
+                } catch (urlError) {
+                    // Handle cases where the URL itself is malformed
+                    toast.error('Invalid GitHub URL. Please check the format.');
+                    return; // Stop execution here
+                }
+                
+                // Construct a new object with all the data the server expects
+                const websiteData = {
+                    ...values,
+                    githubOwner,
+                    githubRepo,
+                };
+
+                // Log the final data object being sent to the server
+                console.log('Sending this data to the server:', websiteData);
+
                 const res = await axios.post(
                     'http://localhost:5000/website/add',
-                    values,
+                    websiteData,
                     {
                         headers: {
                             Authorization: `Bearer ${token}`,
                         },
                     }
                 );
-
+                console.log(res.data);
+                
                 toast.success('Website registered successfully');
                 resetForm();
                 // Optionally redirect to Manage Website tab

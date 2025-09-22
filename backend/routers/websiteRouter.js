@@ -1,5 +1,5 @@
 const express = require('express');
-const Website = require('../models/websitemodel'); // Import the model
+const Website = require('../models/websitemodel');
 const verifyToken = require("../middleware/auth");
 require('dotenv').config();
 const router = express.Router();
@@ -8,11 +8,17 @@ const router = express.Router();
 router.post("/add", verifyToken, async (req, res) => {
     console.log("User from token:", req.user);
     try {
-        const website = new Website({
-            ...req.body,
-            owner: req.user._id, // ✅ Fix: match schema
+        const { name, repository, website, github, githubOwner, githubRepo } = req.body;
+        const newWebsite = new Website({
+            name,
+            repository,
+            website,
+            github,
+            githubOwner,
+            githubRepo,
+            owner: req.user._id,
         });
-        const savedWebsite = await website.save();
+        const savedWebsite = await newWebsite.save();
         res.status(201).json(savedWebsite);
     } catch (error) {
         console.error("Error adding website:", error);
@@ -22,7 +28,7 @@ router.post("/add", verifyToken, async (req, res) => {
 
 router.get("/getall", verifyToken, async (req, res) => {
     try {
-        const websites = await Website.find({ owner: req.user._id }); // ✅ Fix: match schema
+        const websites = await Website.find({ owner: req.user._id });
         res.status(200).json(websites);
     } catch (error) {
         console.error("Error fetching websites:", error);
@@ -30,13 +36,8 @@ router.get("/getall", verifyToken, async (req, res) => {
     }
 });
 
-
-
-
-
-
-// Get a single website by ID
-router.get('/getbyid/:id', async (req, res) => {
+// Get a single website by ID (now protected)
+router.get('/getbyid/:id', verifyToken, async (req, res) => {
     try {
         const website = await Website.findById(req.params.id).populate('owner');
         if (!website) {
@@ -76,15 +77,14 @@ router.delete('/delete/:id', async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 });
+
 router.get("/getuserwebsites", verifyToken, async (req, res) => {
     try {
-        const websites = await WebsiteModel.find({ userId: req.user._id });
+        const websites = await Website.find({ owner: req.user._id });
         res.status(200).json(websites);
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
 });
-
-
 
 module.exports = router;
