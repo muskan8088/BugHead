@@ -5,18 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Test Page</title>
     <link rel="stylesheet" href="http://localhost:5000/main.css">
+    <script>
+  window.bugHeadConfig = {
+    userId: "68ca3e9916a906df6da73268",
+    websiteId: "68ca40a416a906df6da732ae"
+  };
+</script>
+<script src="path/to/your/plugin/dist/main.js" defer></script>
+
 </head>
 <body>
     <h1>Hello, this is a test page.</h1>
     
     <div id="bughead-root"></div>
 
-    <script>
-        window.bugHeadConfig = {
-            userId: "68ca3e9916a906df6da73268",
-            websiteId: "68ca40a416a906df6da732ae"
-        };
-    </script>
+   
     
     <script src="http://localhost:5000/main.js" defer></script>
 </body>
