@@ -1,7 +1,7 @@
 const { Schema, model, Types } = require('../connection');
 
 const websiteSchema = new Schema({
-    name: String,
+    name: { type: String, required: true },
     owner: { type: Types.ObjectId, ref: "Users", required: true },
     repository: { type: String, required: true },
     github: { type: String, required: true },

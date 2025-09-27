@@ -47,7 +47,7 @@ router.post('/add', async (req, res) => {
         const githubToken = process.env.GITHUB_TOKEN;
         const githubTitle = savedIssue.title || savedIssue.issueDescription || 'No Title';
         const githubBody = `
-**Issue details:**
+*Issue details:*
 - Website ID: ${website._id}
 - Website Name: ${website.name || 'N/A'}
 - Description: ${savedIssue.issueDescription || 'N/A'}
@@ -60,7 +60,7 @@ router.post('/add', async (req, res) => {
         const githubResponse = await axios.post(
             `https://api.github.com/repos/${website.githubOwner}/${website.githubRepo}/issues`,
             { title: githubTitle, body: githubBody },
-            { headers: { Authorization: `token ${githubToken}`, Accept: 'application/vnd.github+json' } }
+            { headers: { Authorization: `Bearer ${githubToken}`, Accept: 'application/vnd.github+json' } }
         );
 
         res.status(201).json({ savedIssue, githubIssue: githubResponse.data });

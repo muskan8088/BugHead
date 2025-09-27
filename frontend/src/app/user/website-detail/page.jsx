@@ -257,11 +257,10 @@ const WebsiteDetailsPage = () => {
                                                 </td>
                                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-neutral-400">
                                                     <span
-                                                        className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                                                            bug.status === "open"
+                                                        className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${bug.status === "open"
                                                                 ? "bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-200"
                                                                 : "bg-red-100 text-red-800 dark:bg-red-800 dark:text-red-200"
-                                                        }`}
+                                                            }`}
                                                     >
                                                         {bug.status}
                                                     </span>

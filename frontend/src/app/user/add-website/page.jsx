@@ -52,7 +52,8 @@ const WebsiteSignup = () => {
                         },
                     }
                 );
-
+                console.log(res.data);
+                
                 toast.success('Website registered successfully');
                 resetForm();
                 // Optionally redirect to Manage Website tab
