@@ -1,9 +1,13 @@
 {
+  "engines":{
+    "node":"22.17.1"
+  },
   "name": "backend",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon index"
+    "dev": "nodemon index",
+    "start": "node index.js"
   },
   "keywords": [],
   "author": "",
